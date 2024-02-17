@@ -18,7 +18,7 @@ const BottomBar = ({ height }) => {
   const handleAddMarker = (latitudeIn, longitudeIn) => {
     if (latitudeIn && longitudeIn) {
       console.log(latitudeIn, longitudeIn)
-      addMarker("default marker",
+      addMarker(markerInfo,
         {
           latitude: Number(latitudeIn),
           longitude: Number(longitudeIn),

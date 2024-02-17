@@ -5,17 +5,13 @@ export const ApplicationContext = createContext()
 
 const ContextProvider = ({ children }) => {
 
-    const [mapMarkers, setMapMarkers] = useState([{}])
+    const [mapMarkers, setMapMarkers] = useState([])
 
 
     const addMarker = (text, cords,) => {
-        console.log('cords ')
-        console.log(cords)
-        setMapMarkers([...mapMarkers,
-        {
+        setMapMarkers([...mapMarkers,{
             info: text,
-            cords: cords,
-        }
+            cords: cords,}
         ])
     }
 
