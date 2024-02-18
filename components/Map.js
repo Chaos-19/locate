@@ -13,17 +13,8 @@ import { ApplicationContext } from '../context/ContextProvider';
 const Map = () => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-
-
-
+    
     const { mapMarkers, addMarker } = useContext(ApplicationContext);
-
-    // const addMarker = (event) => {
-    //     console.log("add marker", event.nativeEvent.coordinate);
-    //     setMarkers([...markers, event.nativeEvent.coordinate]);
-
-
-    // };
 
     const handleAddMarker = (event) => {
         const latitudeIn = event.nativeEvent.coordinate.latitude;
@@ -39,7 +30,6 @@ const Map = () => {
 
 
     const [linePoint, setLinePoint] = useState([]);
-
     const [polylines, setPolylines] = useState([]);
 
     const handleLongPress = (event) => {
@@ -55,9 +45,6 @@ const Map = () => {
     const [longitudeIn, onChangeLongitudeIn] = useState(null);
     const [latitudeIn, onChangeLatitudeIn] = useState(null);
 
-    useEffect(() => {
-        console.log("Refrash.........", mapMarkers);
-    }, [])
 
 
 
@@ -77,21 +64,18 @@ const Map = () => {
                 }
                 onDoublePress={handleAddMarker}
             >
-                {mapMarkers.length>1 && [...mapMarkers].map((coordinate, index) => {
-                    return (
-                        <Marker coordinate={coordinate?.cords} key={index} title={coordinate.info}/>
-                    )
+                {mapMarkers.length > 1 &&[...mapMarkers].map((coordinate, index) => {
+                       console.log(coordinate.cords)
+              return (
+              <Marker  
+              coordinate={coordinate.cords}
+            title={"Title for Marker"}
+             description={coordinate.info}
+             key={index+"gsdjhgsdj"}
+              >
+
+              </Marker>)
                 })}
-
-                {/* {linePoint.length == 2 && (
-                    <Polyline
-                        coordinates={linePoint}
-                        strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-                        strokeColors={["#7F0000"]}
-                        strokeWidth={6}
-                    ></Polyline>
-                )} */}
-
                 {polylines.map((line, index) => {
                     return (
                         <Polyline
