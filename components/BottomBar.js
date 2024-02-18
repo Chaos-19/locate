@@ -27,6 +27,8 @@ const BottomBar = ({ height }) => {
   }
 
 
+
+
   return (
     <SlidingUpPanel
       ref={c => (this._panel = c)}

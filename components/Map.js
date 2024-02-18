@@ -3,6 +3,7 @@ import MapView, { Marker, Polyline, Callout } from "react-native-maps";
 
 import { View, Text, StyleSheet } from "react-native";
 import { ApplicationContext } from "../context/ContextProvider";
+import MarkerInfo from "./MarkerInfo";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
@@ -59,12 +60,13 @@ const Map = () => {
             return (
               <Marker
                 coordinate={coordinate.cords}
-                title={"Title for Marker"}
-                description={coordinate.info}
                 key={index + "gsdjhgsdj"}
-              ></Marker>
+                onPress={(event) => console.log("event")}
+              >
+                <MarkerInfo text={coordinate.info} />
+              </Marker>
             );
-          })}
+          })}k
 
         {polylines.map((line, index) => {
           return (
@@ -89,6 +91,9 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  plainView: {
+    width: 100,
   },
 });
 
