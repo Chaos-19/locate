@@ -77,8 +77,10 @@ const Map = () => {
                 }
                 onDoublePress={handleAddMarker}
             >
-                {[...mapMarkers].map((coordinate, index) => {
-                 
+                {mapMarkers.length>1 && [...mapMarkers].map((coordinate, index) => {
+                    return (
+                        <Marker coordinate={coordinate?.cords} key={index} title={coordinate.info}/>
+                    )
                 })}
 
                 {/* {linePoint.length == 2 && (

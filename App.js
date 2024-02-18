@@ -18,7 +18,7 @@ import MapView, { Marker, Polyline, Callout } from "react-native-maps";
 import SearchBar from "./components/SearchBar";
 import BottomBar from "./components/BottomBar";
 
-import Map from './components/Map.1';
+import Map from './components/Map';
 
 import ContextProvider from "./context/ContextProvider";
 
