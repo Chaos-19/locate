@@ -1,12 +1,12 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { useApp } from "../context/AppContext";
-import { haversineDistance } from "../utils/helper";
+
 
 const InputLogLat = () => {
 
     const [visible, setvisible] = useState<boolean>(false)
 
-    const { startLocation, pointDescription, addPoint, pointOnMap, setPointOnMap } = useApp();
+    const {  addPoint } = useApp();
 
     const [latitude, setLatitude] = useState<string>('');
     const [longitude, setLongtiude] = useState<string>('')

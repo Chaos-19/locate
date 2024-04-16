@@ -20,7 +20,7 @@ const Line = ({ length, end }: {
 
     const value = getMatchValue(end, pointOnMap);
 
-    const { angle: angle2, distance, direction } = getDirectionAndAngle(value.startPoint.latitude, value.startPoint.longitude, value.endPoint.latitude, value.endPoint.longitude);
+    const { angle: angle2, distance } = getDirectionAndAngle(value.startPoint.latitude, value.startPoint.longitude, value.endPoint.latitude, value.endPoint.longitude);
 
 
     return (
