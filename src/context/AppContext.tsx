@@ -21,7 +21,7 @@ const useApp = () => {
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
-  const [startLocation, setStartLocation] = useState<Point>({
+  const [startLocation] = useState<Point>({
     latitude: 11,
     longitude: 37.68
   })
