@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.chaos.map" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>GaedcMap</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+<plugin name="cordova-plugin-geolocation" spec="4.0.1">`
+       <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="App uses geolocation to determine where you are." />
+</plugin>
+<platform name="android">
+       <uses-permission name="android.permission.ACCESS_COARSE_LOCATION" />
+       <uses-permission name="android.permission.ACCESS_FINE_LOCATION" />
+       <uses-permission name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+</platform>
+<preference name="cordova.plugins.diagnostic.modules" value="" />
+</widget>
