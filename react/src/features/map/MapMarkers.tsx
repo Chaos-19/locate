@@ -1,6 +1,8 @@
 import { Marker, Tooltip } from "react-leaflet"
 import { useAppSelector } from "../../app/hooks"
 import { selectPointOnMap } from "./mapPointSlice"
+import UpdateLocation from "@/components/UpdateLocation"
+import Input from "@/components/Input"
 
 
 const MapMarkers = () => {
@@ -21,7 +23,13 @@ const MapMarkers = () => {
                         <p>{point.pointMataData.name}</p>
                         <p>lat : {point.coord.lat}</p>
                         <p>long : {point.coord.lng}</p>
+                        <div className="relative">
+                            <div className="hidden">
+                                <Input />
+                            </div>
+                        </div>
                     </Tooltip>
+
                 </Marker>
             ))
         }</>

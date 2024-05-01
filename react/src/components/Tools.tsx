@@ -1,7 +1,7 @@
 import { MapPin, Pencil, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { selectPointOnMap, setConnectPoint, setPointOnMap, setUserLocation } from "../features/map/mapPointSlice"
+import { selectPointOnMap, setConnectPoint, setPointOnMap, setUserLocation, updatePonitMap } from "../features/map/mapPointSlice"
 import { useMap } from "react-leaflet"
 import Input from "./Input"
 
@@ -61,30 +61,34 @@ const Tools = () => {
 
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
+        let watchId: number | null = null
 
-            if (!isLocationSet && userLocation?.lat === 0 && userLocation?.lng === 0) {
+        watchId = navigator.geolocation.watchPosition((position) => {
+            dispatch(setUserLocation({
+                lat: position.coords.latitude, lng: position.coords.longitude
+            }))
 
-                map.flyTo([position.coords.latitude, position.coords.longitude], 13)
+            dispatch(updatePonitMap({
+                coord: {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                },
+                pointMataData: {
+                    name: 'YOUR LOCATION'
+                }
+            }))
 
-                dispatch(setUserLocation({
-                    lat: position.coords.latitude, lng: position.coords.longitude
-                }))
-                alert(`${position.coords.latitude + "  ::  " + position.coords.longitude}`);
-
-                dispatch(setPointOnMap({
-                    coord: {
-                        lat: position.coords.latitude, lng: position.coords.longitude
-                    },
-                    pointMataData: {
-                        name: 'YOUR LOCATION'
-                    }
-                }))
-                setIsLocationSet(true)
-            }
         }, (error) => {
             alert(error.message)
-        });
+        },
+            { enableHighAccuracy: true });
+
+        return () => {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+            }
+
+        };
 
     }, [])
 
@@ -160,29 +164,26 @@ const Tools = () => {
                     color={isOpenDraw ? "red" : "black"}
                     aria-disabled={isLocationSet}
                     onClick={() => {
+                        map.flyTo([userLocation?.lat as number, userLocation?.lng as number], 13)
                         navigator.geolocation.getCurrentPosition((position) => {
-                            if (userLocation?.lat == 0 && userLocation?.lng == 0) {
-                                setIsLocationSet(true)
-                                dispatch(setUserLocation({
-                                    lat: position.coords.latitude, lng: position.coords.longitude
-                                }))
-                                alert(`${position.coords.latitude + "  ::  " + position.coords.longitude}`);
+                            dispatch(setUserLocation({
+                                lat: position.coords.latitude, lng: position.coords.longitude
+                            }))
 
-                                map.flyTo([position.coords.latitude, position.coords.longitude], map.getZoom())
-                                dispatch(setPointOnMap({
-                                    coord: {
-                                        lat: position.coords.latitude, lng: position.coords.longitude
-                                    },
-                                    pointMataData: {
-                                        name: 'YOU LOCATIOON'
-                                    }
-                                }))
-                            }
-                            map.flyTo([11.49, 38.08], map.getZoom())
+                            dispatch(updatePonitMap({
+                                coord: {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                },
+                                pointMataData: {
+                                    name: 'YOUR LOCATION'
+                                }
+                            }))
+                            map.flyTo([position.coords.latitude, position.coords.longitude], map.getZoom())
 
                         }, (error) => {
                             alert(error.message)
-                        });
+                        }, { enableHighAccuracy: true });
                     }}
                 />
             </div>

@@ -39,9 +39,13 @@ const mapPointSlice = createSlice({
                 state.pointOnMap.push({ ...action.payload, id: Date.now() })
             }
         },
-        updatePonitMap: (state, action: PayloadAction<pointOnMapType>) => {
-            const preState = state.pointOnMap.filter((point) => point.id !== action.payload.id)
-            state.pointOnMap = [...preState, action.payload]
+        updatePonitMap: (state, action: PayloadAction<Pick<pointOnMapType, | 'coord' | 'pointMataData'>>) => {
+            const preState = state.pointOnMap.filter((point) => point.pointMataData.name !== action.payload.pointMataData.name)
+            const preStateIndex = state.pointOnMap.findIndex((point) => point.pointMataData.name === action.payload.pointMataData.name)
+            state.pointOnMap = [...preState, {
+                ...state.pointOnMap[preStateIndex],
+                coord: action.payload.coord
+            }]
         },
         setConnectPoint: (state, action: PayloadAction<{ startPoint: number, endPoint: number }>) => {
 

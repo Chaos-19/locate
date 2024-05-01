@@ -5,9 +5,12 @@ import L from 'leaflet'
 import { createLayerComponent } from '@react-leaflet/core'
 import Tools from './components/Tools'
 import MapMarkers from './features/map/MapMarkers'
-import { useAppSelector } from './app/hooks'
+import { useAppDispatch, useAppSelector } from './app/hooks'
 import { getDirectionAndAngle } from './utils'
 import protracter from "./assets/img.png"
+//import { useEffect } from 'react'
+import { setPointOnMap, setUserLocation } from './features/map/mapPointSlice'
+import { useEffect } from 'react'
 
 
 
@@ -50,8 +53,34 @@ const App = () => {
   const holeSate = useAppSelector((state) => state.map)
 
   const center = useAppSelector((state) => state.map.userLocation)
+  const dispatch = useAppDispatch()
+
+  const userLocation = useAppSelector((state) => state.map.userLocation)
 
 
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+
+      if (userLocation?.lat === 0 && userLocation?.lng === 0) {
+        dispatch(setUserLocation({
+          lat: position.coords.latitude, lng: position.coords.longitude
+        }))
+
+        dispatch(setPointOnMap({
+          coord: {
+            lat: position.coords.latitude, lng: position.coords.longitude
+          },
+          pointMataData: {
+            name: 'YOUR LOCATION'
+          }
+        }))
+      }
+
+    }, (error) => {
+      alert(error.message)
+    });
+  }, [])
 
 
   return (
