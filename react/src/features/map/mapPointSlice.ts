@@ -4,8 +4,8 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 type coord = {
     lat: number
     lng: number
-}
-type pointOnMapType = {
+} 
+export type pointOnMapType = {
     id: number
     coord: coord,
     pointMataData: {

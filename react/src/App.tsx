@@ -5,12 +5,10 @@ import L from 'leaflet'
 import { createLayerComponent } from '@react-leaflet/core'
 import Tools from './components/Tools'
 import MapMarkers from './features/map/MapMarkers'
-import { useAppDispatch, useAppSelector } from './app/hooks'
+import { useAppSelector } from './app/hooks'
 import { getDirectionAndAngle } from './utils'
 import protracter from "./assets/img.png"
-//import { useEffect } from 'react'
-import { setPointOnMap, setUserLocation } from './features/map/mapPointSlice'
-import { useEffect } from 'react'
+
 
 
 
@@ -53,34 +51,9 @@ const App = () => {
   const holeSate = useAppSelector((state) => state.map)
 
   const center = useAppSelector((state) => state.map.userLocation)
-  const dispatch = useAppDispatch()
-
-  const userLocation = useAppSelector((state) => state.map.userLocation)
-
-
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-
-      if (userLocation?.lat === 0 && userLocation?.lng === 0) {
-        dispatch(setUserLocation({
-          lat: position.coords.latitude, lng: position.coords.longitude
-        }))
-
-        dispatch(setPointOnMap({
-          coord: {
-            lat: position.coords.latitude, lng: position.coords.longitude
-          },
-          pointMataData: {
-            name: 'YOUR LOCATION'
-          }
-        }))
-      }
-
-    }, (error) => {
-      alert(error.message)
-    });
-  }, [])
+  /*   const dispatch = useAppDispatch()
+  
+    const userLocation = useAppSelector((state) => state.map.userLocation) */
 
 
   return (
@@ -98,7 +71,7 @@ const App = () => {
       <DebugCoordsLayerComponent />
       <MapMarkers />
       {holeSate.pointOnMap.slice(1).map((point) => {
-        const { angle, direction, distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
+        const { direction, distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
         return (
           <Polyline
             key={point.id}
@@ -108,22 +81,13 @@ const App = () => {
               direction="auto"
               opacity={1}
               permanent
-
             >
               <p>distance :{(distance)} Km</p>
               <p>Direction : {direction}</p>
-              <p>Angle : {angle}</p>
             </Tooltip>
           </Polyline>
         )
       })}
-      {/*     <Circle
-        center={center as L.LatLng}
-        pathOptions={{ color: 'red' }}
-        radius={100}
-        stroke={false}
-      />
- */}
       <ImageOverlay
         url={protracter}
         bounds={

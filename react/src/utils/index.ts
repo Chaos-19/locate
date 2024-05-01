@@ -1,15 +1,15 @@
 import L from 'leaflet'
 
-/* const EARTH_RADIUS = 6371; // In kilometers
+const EARTH_RADIUS = 6371; // In kilometers
 
 function toRadians(degrees: number): number {
     return degrees * Math.PI / 180;
-} */
+}
 
-/* export function haversineDistance(poin1: L.LatLng, poin2: L.LatLng): number {
+export function haversineDistance(point1: L.LatLng, point2: L.LatLng): number {
 
-    const { lat: lat1, lng: lon1 } = new L.LatLng(poin1.alt as number, poin1.lng);
-    const { lat: lat2, lng: lon2 } = new L.LatLng(poin2.alt as number, poin2.lng);
+    const { lat: lat1, lng: lon1 } = point1;
+    const { lat: lat2, lng: lon2 } = point2;
 
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
@@ -18,7 +18,7 @@ function toRadians(degrees: number): number {
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const angle = 2 * Math.asin(Math.sqrt(a));
     return angle * EARTH_RADIUS;
-} */
+}
 
 /* export function getDirectionAndAngle(poin1: L.LatLng, poin2: L.LatLng): {
     angle: number;
@@ -84,25 +84,27 @@ export function getDirectionAndAngle(poin1: L.LatLng, poin2: L.LatLng): {
 
     // Calculate the angle from the north (0 to 360 degrees)
     let angle = Math.atan2(adjustedLonDiff, adjustedLatDiff) * (180 / Math.PI);
+
     angle = ((angle + 90) % 360); // Ensure the angle is positive and within the range [0, 360)
+
 
     // Calculate the direction (N, NE, E, SE, S, SW, W, NW)
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    console.log({
-        angle,
-        index: Math.round(angle / 45) % 8,
-        f: Math.round(angle / 45)
-    });
+
     const directionIndex = (Math.round(angle / 45)) % 8;
 
     // Handle edge case: same point
     const direction = poin1.lat === poin2.lat && poin1.lng === poin2.lng ? "Same Point" : directions[directionIndex];
 
     angle = Math.round(angle * 100) / 100;
+
+
+
+
     return {
         direction,
         angle,
-        distance: calculateDistanceLambert(poin1, poin2)
+        distance: haversineDistance(poin1, poin2)
     };
 }
 
@@ -142,3 +144,17 @@ export function calculateDistanceLambert(point1: L.LatLng, point2: L.LatLng): nu
     return s12 as number; // Distance in meters
 }
 
+export function convertToDMS(angle: number): string {
+    const degrees = float2int(angle);  // Extract degrees      
+    const minutes = float2int((angle - degrees) * 60);  // Extract minutes
+    const seconds = float2int(((angle - degrees) * 60 - minutes) * 60);  // Extract seconds
+    return `${degrees}° ${minutes}' ${seconds}"`;
+}
+
+const float2int = (value: number): number => value | 0;
+
+export function convertDMSToLatLong(dms: string): number {
+    const [degrees, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseInt) ?? [0, 0, 0];
+    const lat = degrees + minutes / 60 + seconds / 3600;
+    return lat
+}

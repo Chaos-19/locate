@@ -23,14 +23,17 @@ const Tools = () => {
 
     const handleClick = () => {
         dispatch(setPointOnMap({
-            coord: {
-                lat: Number(latitude),
-                lng: Number(longtiude)
-            },
-            pointMataData: {
-                name: name
-            }
-        }))
+             coord: {
+                 lat: Number(latitude),
+                 lng: Number(longtiude)
+             },
+             pointMataData: {
+                 name: name
+             }
+         }))
+
+        console.log({ lat: Number(latitude), lng: Number(longtiude), name: name });
+
 
         setLongtiude("")
         setLatitude("")
@@ -44,7 +47,6 @@ const Tools = () => {
 
 
     const handleConnect = () => {
-
         if (start !== "" && destination !== "") {
             dispatch(setConnectPoint({
                 startPoint: Number(start),
@@ -60,36 +62,31 @@ const Tools = () => {
     const [isLocationSet, setIsLocationSet] = useState<boolean>(false)
 
 
+
     useEffect(() => {
-        let watchId: number | null = null
+        navigator.geolocation.getCurrentPosition((position) => {
 
-        watchId = navigator.geolocation.watchPosition((position) => {
-            dispatch(setUserLocation({
-                lat: position.coords.latitude, lng: position.coords.longitude
-            }))
+            if (!isLocationSet && userLocation?.lat === 0 && userLocation?.lng === 0) {
+                dispatch(setUserLocation({
+                    lat: position.coords.latitude, lng: position.coords.longitude
+                }))
 
-            dispatch(updatePonitMap({
-                coord: {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                },
-                pointMataData: {
-                    name: 'YOUR LOCATION'
-                }
-            }))
-
-        }, (error) => {
-            alert(error.message)
-        },
-            { enableHighAccuracy: true });
-
-        return () => {
-            if (watchId !== null) {
-                navigator.geolocation.clearWatch(watchId);
+                dispatch(setPointOnMap({
+                    coord: {
+                        lat: position.coords.latitude, lng: position.coords.longitude
+                    },
+                    pointMataData: {
+                        name: 'YOUR LOCATION'
+                    }
+                }))
             }
 
-        };
+            map.flyTo([position.coords.latitude, position.coords.longitude], 13)
 
+            setIsLocationSet(true)
+        }, (error) => {
+            alert(error.message)
+        });
     }, [])
 
 
