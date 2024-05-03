@@ -8,6 +8,7 @@ import MapMarkers from './features/map/MapMarkers'
 import { useAppSelector } from './app/hooks'
 import { getDirectionAndAngle } from './utils'
 import protracter from "./assets/img.png"
+import { cn } from './lib/utils'
 
 
 
@@ -18,7 +19,8 @@ class DebugCoords extends L.TileLayer {
 
   createTile(coords: L.Coords, done: L.DoneCallback) {
     const tile: HTMLElement = document.createElement('div')
-    tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
+    //tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
+   // console.log([coords.x, coords.y, coords.z]);
 
     tile.style.outline = '0.101px solid #fff';
 
@@ -38,9 +40,6 @@ const DebugCoordsLayer = (props: DebugCoordsProps, context: any) => {
   return { instance, context }
 }
 
-/* const DebugCoordsLayerUpdate = (instance: any, props: DebugCoordsProps, prevProps: DebugCoordsProps) => {
-  instance.setUrl("placeholder")
-} */
 
 const DebugCoordsLayerComponent = createLayerComponent(DebugCoordsLayer/* , DebugCoordsLayerUpdate */)
 
@@ -49,11 +48,7 @@ const DebugCoordsLayerComponent = createLayerComponent(DebugCoordsLayer/* , Debu
 const App = () => {
 
   const holeSate = useAppSelector((state) => state.map)
-
   const center = useAppSelector((state) => state.map.userLocation)
-  /*   const dispatch = useAppDispatch()
-  
-    const userLocation = useAppSelector((state) => state.map.userLocation) */
 
 
   return (
@@ -71,19 +66,20 @@ const App = () => {
       <DebugCoordsLayerComponent />
       <MapMarkers />
       {holeSate.pointOnMap.slice(1).map((point) => {
-        const { direction, distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
+        const {/*  direction, */ distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
         return (
           <Polyline
             key={point.id}
             positions={[holeSate.userLocation as L.LatLng, point.coord]}
+
           >
             <Tooltip
-              direction="auto"
+              direction="top"
+              className={cn('border-red-300 border-2', `rotate-${360}`)}
               opacity={1}
               permanent
             >
-              <p>distance :{(distance)} Km</p>
-              <p>Direction : {direction}</p>
+              <p className='text-base'>{(distance.toFixed(2))} Km</p>
             </Tooltip>
           </Polyline>
         )

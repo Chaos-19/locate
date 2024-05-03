@@ -18,8 +18,6 @@ L.Marker.prototype.setIcon(L.icon({
   shadowSize: [41, 41]
 }))
 
-//const dispatch = store.dispatch
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -132,6 +132,7 @@ function mapAngle(angle: number) {
 
 // Assuming you have a library for handling ellipsoidal calculations (e.g., geographiclib)
 import * as GeographicLib from 'geographiclib';
+import { getByValue } from '@/constants';
 
 export function calculateDistanceLambert(point1: L.LatLng, point2: L.LatLng): number {
     const { lat: lat1, lng: lon1 } = point1;
@@ -144,17 +145,38 @@ export function calculateDistanceLambert(point1: L.LatLng, point2: L.LatLng): nu
     return s12 as number; // Distance in meters
 }
 
-export function convertToDMS(angle: number): string {
-    const degrees = float2int(angle);  // Extract degrees      
-    const minutes = float2int((angle - degrees) * 60);  // Extract minutes
-    const seconds = float2int(((angle - degrees) * 60 - minutes) * 60);  // Extract seconds
+export function convertToDMS(latOrlog: number): string {
+    const degrees = float2int(latOrlog);  // Extract degrees  
+    const minutes = float2int((latOrlog - degrees) * 60);// Extract minutes
+    const seconds = float2int(round((((latOrlog - degrees) * 60) - minutes) * 60));  // Extract seconds
     return `${degrees}° ${minutes}' ${seconds}"`;
 }
 
-const float2int = (value: number): number => value | 0;
+export const float2int = (value: number): number => value | 0;
 
 export function convertDMSToLatLong(dms: string): number {
-    const [degrees, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseInt) ?? [0, 0, 0];
-    const lat = degrees + minutes / 60 + seconds / 3600;
+    const [degrees, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    const lat = degrees + (minutes / 60) + (seconds / 3600);
     return lat
+}
+
+export function encryptDMS(latOrLng: number): string {
+    const dms = convertToDMS(latOrLng);
+    const [, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    return `${getByValue(minutes)} ${getByValue(seconds)}`;
+}
+
+export function encryptDMSInput(lat: number, lng: number): string {
+    const dmsLat = convertToDMS(lat);
+    const dmsLng = convertToDMS(lng);
+    const [, minutes, seconds] = dmsLat.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    const [, minutesLng, secondsLng] = dmsLng.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    return `${getByValue(minutes)}${getByValue(seconds)}${getByValue(minutesLng)}${getByValue(secondsLng)}`;
+}
+
+function round(value: number): number {
+    const intValue = float2int(value);
+    const decimalValue = value - intValue;
+    if (decimalValue >= 0.8) return intValue + 1
+    return intValue
 }
