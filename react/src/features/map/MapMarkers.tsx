@@ -8,6 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { X } from "lucide-react"
 import { isKeyExist, REGEXP_ONLY_DIGITS_AND_CHARS } from "@/constants"
 import { cn } from "@/lib/utils"
+import SelectConnect from "@/components/SelectConnect"
 
 
 
@@ -44,6 +45,11 @@ const CustomPopup = ({
     const [inputVal, setInputVal] = useState<string>("")
     const [InputVal2, setInputVal2] = useState<string>("")
 
+    const [missLat, setMissLat] = useState<string>("")
+    const [missLng, setMissLng] = useState<string>("")
+
+
+
 
     const dispatch = useAppDispatch()
     const userLocation = useAppSelector((state) => state.map.userLocation)
@@ -54,6 +60,9 @@ const CustomPopup = ({
         const lagAndLng = encryptDMSInput(point.coord.lat, point.coord.lng)
         setInputVal(lagAndLng.slice(0, 3))
         setInputVal2(lagAndLng.slice(3, 6))
+        setMissLat(point?.missdValue?.lat.toString() as string)
+        setMissLng(point?.missdValue?.lng.toString() as string)
+
     }, [userLocation])
 
     function handleUpdate() {
@@ -64,7 +73,7 @@ const CustomPopup = ({
                 isKeyExist(InputVal2[0]) &&
                 isKeyExist(InputVal2[1]) &&
                 isKeyExist(InputVal2[2])) {
-                dispatch(updataPointOnMapFromDMS({ coord: `${inputVal + InputVal2}`, name, id: point.id }))
+                dispatch(updataPointOnMapFromDMS({ coord: `${inputVal + InputVal2}`, name, id: point.id, missLat: Number(missLat), missLng: Number(missLng) }))
                 setsetEditeMode(false)
             } else {
                 alert("Invalid Input")
@@ -90,35 +99,52 @@ const CustomPopup = ({
             maxWidth={250}  >
             {setEditeMode ? (
                 <div className="flex flex-col justify-center w-max">
-                    <InputOTP
-                        pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                        maxLength={3}
-                        value={inputVal}
-                        onChange={(e) => setInputVal(e)}
-                    >
-                        <InputOTPGroup >
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                    </InputOTP>
-                    <InputOTP
-                        pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                        maxLength={3}
-                        value={InputVal2}
-                        onChange={(e) => setInputVal2(e)}
-                    >
-                        <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                    </InputOTP>
+                    <div className="flex gap-1">
+
+                        <InputOTP
+                            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                            maxLength={3}
+                            value={inputVal}
+                            onChange={(e) => setInputVal(e)}
+                        >
+                            <InputOTPGroup >
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                            </InputOTPGroup>
+                        </InputOTP>
+                        <Input
+                            type="text"
+                            placeholder="lat"
+                            className="p-1 my-0.5 focus-visible:ring-0 focus-visible:border-black rounded-md w-[40px]"
+                            value={missLat}
+                            onChange={(e) => setMissLat(e.target.value)} />
+                    </div>
+                    <div className="flex gap-1">
+                        <InputOTP
+                            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                            maxLength={3}
+                            value={InputVal2}
+                            onChange={(e) => setInputVal2(e)}
+                        >
+                            <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                            </InputOTPGroup>
+                        </InputOTP>
+                        <Input
+                            type="text"
+                            placeholder="lng"
+                            className="p-1 my-0.5 focus-visible:ring-0 focus-visible:border-black rounded-md w-[40px]"
+                            value={missLng}
+                            onChange={(e) => setMissLng(e.target.value)} />
+                    </div>
                     <Input
                         type="text"
                         placeholder="LOCATION NAME"
                         value={name}
-                        className="p-1 my-0.5 focus-visible:ring-0 focus-visible:border-black rounded-md w-[150px]"
+                        className="p-1 my-0.5 focus-visible:ring-0 focus-visible:border-black rounded-md w-[100px]"
                         onChange={(e) => setName(e.target.value)}
                     />
                     <div className="flex items-center gap-1">
@@ -134,7 +160,10 @@ const CustomPopup = ({
                     "-space-y-3": isUserLocation
                 })}>
                     {!isUserLocation && <X color="red" className="mb-1" onClick={handleDelete} />}
-                    <p>{point.pointMataData.name}</p>
+                    <div className="flex items-center gap-1 z-[99999999]">
+                        <p>{point.pointMataData.name}</p>
+                        {!isUserLocation && <SelectConnect idNo={point.id} />}
+                    </div>
                     {isUserLocation && <p>{missedSecondValue(point.coord.lat)}</p>}
                     <div className="flex items-center gap-1">
                         <p className="text-sm px-2 p-1 bg-slate-500 text-white">{encryptDMS(point.coord.lat) + " "}{encryptDMS(point.coord.lng)}</p>

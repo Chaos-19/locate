@@ -12,6 +12,10 @@ export type pointOnMapType = {
     coord: coord,
     pointMataData: {
         name: string
+    },
+    missdValue?: {
+        lat: number,
+        lng: number
     }
 }
 
@@ -49,7 +53,7 @@ const mapPointSlice = createSlice({
                 coord: action.payload.coord
             }]
         },
-        setPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string }>) => {
+        setPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, missLat: number, missLng: number }>) => {
             const latDMS = `${getNumValue(action.payload.coord[0])}° ${getNumValue(action.payload.coord[1])}' ${getNumValue(action.payload.coord[2])}"`
             const lngMS = `${getNumValue(action.payload.coord[3])}° ${getNumValue(action.payload.coord[4])}' ${getNumValue(action.payload.coord[5])}"`
 
@@ -60,11 +64,15 @@ const mapPointSlice = createSlice({
                 state.pointOnMap.push({
                     coord: { lat, lng },
                     pointMataData: { name: action.payload.name },
-                    id: Date.now()
+                    id: Date.now(),
+                    missdValue: {
+                        lat: action.payload.missLat,
+                        lng: action.payload.missLng
+                    }
                 })
             }
         },
-        updataPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, id: number }>) => {
+        updataPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, id: number ,missLat?: number, missLng?: number}>) => {
             const latDMS = `${getNumValue(action.payload.coord[0])}° ${getNumValue(action.payload.coord[1])}' ${getNumValue(action.payload.coord[2])}"`
             const lngMS = `${getNumValue(action.payload.coord[3])}° ${getNumValue(action.payload.coord[4])}' ${getNumValue(action.payload.coord[5])}"`
 

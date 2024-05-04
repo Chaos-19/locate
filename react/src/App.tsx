@@ -1,7 +1,7 @@
 import { ImageOverlay, MapContainer, Polyline, Tooltip } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
-import L from 'leaflet'
+import L, { polyline } from 'leaflet'
 import { createLayerComponent } from '@react-leaflet/core'
 import Tools from './components/Tools'
 import MapMarkers from './features/map/MapMarkers'
@@ -20,7 +20,7 @@ class DebugCoords extends L.TileLayer {
   createTile(coords: L.Coords, done: L.DoneCallback) {
     const tile: HTMLElement = document.createElement('div')
     //tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
-    // console.log([coords.x, coords.y, coords.z]);
+    //console.log([coords.x, coords.y, coords.z]);
 
     tile.style.outline = '0.101px solid #fff';
 
@@ -66,11 +66,28 @@ const App = () => {
       <DebugCoordsLayerComponent />
       <MapMarkers />
       {holeSate.pointOnMap.map((point) => {
-        const {/*  direction, */ distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
+        const {/*  direction, */ distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng, point.missdValue as { lat: number, lng: number });
         return (
           <Polyline
             key={point.id}
             positions={[holeSate.userLocation as L.LatLng, point.coord]}
+          >
+            <Tooltip
+              direction="auto"
+              opacity={1}
+              permanent
+            >
+              <p className='text-base'>{(distance.toFixed(3))} Km</p>
+            </Tooltip>
+          </Polyline>
+        )
+      })}
+      {holeSate.connectedPoints.map((point) => {
+        const {/*  direction, */ distance } = getDirectionAndAngle(point.startPoint.coord as L.LatLng, point.endPoint.coord as L.LatLng);
+        return (
+          <Polyline
+            key={point.startPoint.id+point.endPoint.id}
+            positions={[point.startPoint.coord as L.LatLng, point.endPoint.coord]}
           >
             <Tooltip
               direction="auto"
