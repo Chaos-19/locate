@@ -162,16 +162,16 @@ export function convertDMSToLatLong(dms: string): number {
 
 export function encryptDMS(latOrLng: number): string {
     const dms = convertToDMS(latOrLng);
-    const [, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
-    return `${getByValue(minutes)} ${getByValue(seconds)}`;
+    const [degree, minutes, seconds] = dms.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    return `${getByValue(degree)} ${getByValue(minutes)} ${getByValue(seconds)}`;
 }
 
 export function encryptDMSInput(lat: number, lng: number): string {
     const dmsLat = convertToDMS(lat);
     const dmsLng = convertToDMS(lng);
-    const [, minutes, seconds] = dmsLat.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
-    const [, minutesLng, secondsLng] = dmsLng.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
-    return `${getByValue(minutes)}${getByValue(seconds)}${getByValue(minutesLng)}${getByValue(secondsLng)}`;
+    const [degree, minutes, seconds] = dmsLat.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    const [degreeLng, minutesLng, secondsLng] = dmsLng.match(/(\d+)/g)?.map(parseFloat) ?? [0, 0, 0];
+    return `${getByValue(degree)}${getByValue(minutes)}${getByValue(seconds)}${getByValue(degreeLng)}${getByValue(minutesLng)}${getByValue(secondsLng)}`;
 }
 
 function round(value: number): number {
@@ -179,4 +179,11 @@ function round(value: number): number {
     const decimalValue = value - intValue;
     if (decimalValue >= 0.8) return intValue + 1
     return intValue
+}
+
+export function missedSecondValue(value: number) {
+    const degrees = float2int(value);  // Extract degrees  
+    const minutes = float2int((value - degrees) * 60);// Extract minutes
+    const seconds = (((value - degrees) * 60) - minutes) * 60;
+    return ((seconds - float2int(seconds)) * 30.8).toFixed(2)
 }

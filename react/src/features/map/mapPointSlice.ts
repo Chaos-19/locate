@@ -1,5 +1,5 @@
 import { getNumValue } from "@/constants";
-import { convertDMSToLatLong, float2int } from "@/utils";
+import { convertDMSToLatLong, } from "@/utils";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 
@@ -41,7 +41,7 @@ const mapPointSlice = createSlice({
                 state.pointOnMap.push({ ...action.payload, id: Date.now() })
             }
         },
-        updatePonitMap: (state, action: PayloadAction<Pick<pointOnMapType, | 'coord' | 'pointMataData'>>) => {
+        updatePointMap: (state, action: PayloadAction<Pick<pointOnMapType, | 'coord' | 'pointMataData'>>) => {
             const preState = state.pointOnMap.filter((point) => point.pointMataData.name !== action.payload.pointMataData.name)
             const preStateIndex = state.pointOnMap.findIndex((point) => point.pointMataData.name === action.payload.pointMataData.name)
             state.pointOnMap = [...preState, {
@@ -50,8 +50,8 @@ const mapPointSlice = createSlice({
             }]
         },
         setPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string }>) => {
-            const latDMS = `${float2int(state.userLocation?.lat as number)}° ${getNumValue(action.payload.coord[0])}' ${getNumValue(action.payload.coord[1])}"`
-            const lngMS = `${float2int(state.userLocation?.lng as number)}° ${getNumValue(action.payload.coord[2])}' ${getNumValue(action.payload.coord[3])}"`
+            const latDMS = `${getNumValue(action.payload.coord[0])}° ${getNumValue(action.payload.coord[1])}' ${getNumValue(action.payload.coord[2])}"`
+            const lngMS = `${getNumValue(action.payload.coord[3])}° ${getNumValue(action.payload.coord[4])}' ${getNumValue(action.payload.coord[5])}"`
 
             const lat = convertDMSToLatLong(latDMS);
             const lng = convertDMSToLatLong(lngMS);
@@ -64,10 +64,10 @@ const mapPointSlice = createSlice({
                 })
             }
         },
-
         updataPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, id: number }>) => {
-            const latDMS = `${float2int(state.userLocation?.lat as number)}° ${getNumValue(action.payload.coord[0])}' ${getNumValue(action.payload.coord[1])}"`
-            const lngMS = `${float2int(state.userLocation?.lng as number)}° ${getNumValue(action.payload.coord[2])}' ${getNumValue(action.payload.coord[3])}"`
+            const latDMS = `${getNumValue(action.payload.coord[0])}° ${getNumValue(action.payload.coord[1])}' ${getNumValue(action.payload.coord[2])}"`
+            const lngMS = `${getNumValue(action.payload.coord[3])}° ${getNumValue(action.payload.coord[4])}' ${getNumValue(action.payload.coord[5])}"`
+
 
             const lat = convertDMSToLatLong(latDMS);
             const lng = convertDMSToLatLong(lngMS);
@@ -89,7 +89,6 @@ const mapPointSlice = createSlice({
             state.pointOnMap = state.pointOnMap.filter((point) => point.id !== action.payload)
         },
         setConnectPoint: (state, action: PayloadAction<{ startPoint: number, endPoint: number }>) => {
-
             state.connectedPoints.push({
                 startPoint: state.pointOnMap[action.payload.startPoint],
                 endPoint: state.pointOnMap[action.payload.endPoint]
@@ -103,7 +102,7 @@ const mapPointSlice = createSlice({
 
 export const {
     setPointOnMap,
-    updatePonitMap,
+    updatePointMap,
     setConnectPoint,
     setUserLocation,
     setPointOnMapFromDMS,

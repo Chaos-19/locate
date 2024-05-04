@@ -1,7 +1,7 @@
 import { MapPin } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { setPointOnMap, setUserLocation, updatePonitMap } from "../features/map/mapPointSlice"
+import { setUserLocation, } from "../features/map/mapPointSlice"
 import { useMap } from "react-leaflet"
 import Input from "./Input"
 
@@ -11,7 +11,7 @@ const Tools = () => {
 
     const dispatch = useAppDispatch()
     const userLocation = useAppSelector((state) => state.map.userLocation)
-    const pointOnMap = useAppSelector((state) => state.map.pointOnMap)
+
     const map = useMap()
     const [isLocationSet, setIsLocationSet] = useState<boolean>(false)
 
@@ -21,15 +21,6 @@ const Tools = () => {
             if (!isLocationSet && userLocation?.lat === 0 && userLocation?.lng === 0) {
                 dispatch(setUserLocation({
                     lat: position.coords.latitude, lng: position.coords.longitude
-                }))
-
-                dispatch(setPointOnMap({
-                    coord: {
-                        lat: position.coords.latitude, lng: position.coords.longitude
-                    },
-                    pointMataData: {
-                        name: 'YOUR LOCATION'
-                    }
                 }))
                 setIsLocationSet(true)
             }
@@ -55,30 +46,6 @@ const Tools = () => {
                             dispatch(setUserLocation({
                                 lat: position.coords.latitude, lng: position.coords.longitude
                             }))
-
-                            if (pointOnMap.findIndex((point) => point.coord.lat === position.coords.latitude && point.coord.lng === position.coords.longitude) === -1) {
-
-                                dispatch(setPointOnMap({
-                                    coord: {
-                                        lat: position.coords.latitude, lng: position.coords.longitude
-                                    },
-                                    pointMataData: {
-                                        name: 'YOUR LOCATION'
-                                    }
-                                }))
-                            } else {
-
-                                dispatch(updatePonitMap({
-                                    coord: {
-                                        lat: position.coords.latitude,
-                                        lng: position.coords.longitude
-                                    },
-                                    pointMataData: {
-                                        name: 'YOUR LOCATION'
-                                    }
-                                }))
-                            }
-
                         }, (error) => {
                             alert(error.message)
                         }, { enableHighAccuracy: true });

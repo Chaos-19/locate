@@ -8,7 +8,7 @@ import MapMarkers from './features/map/MapMarkers'
 import { useAppSelector } from './app/hooks'
 import { getDirectionAndAngle } from './utils'
 import protracter from "./assets/img.png"
-import { cn } from './lib/utils'
+
 
 
 
@@ -20,7 +20,7 @@ class DebugCoords extends L.TileLayer {
   createTile(coords: L.Coords, done: L.DoneCallback) {
     const tile: HTMLElement = document.createElement('div')
     //tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
-   // console.log([coords.x, coords.y, coords.z]);
+    // console.log([coords.x, coords.y, coords.z]);
 
     tile.style.outline = '0.101px solid #fff';
 
@@ -65,21 +65,19 @@ const App = () => {
       <Tools />
       <DebugCoordsLayerComponent />
       <MapMarkers />
-      {holeSate.pointOnMap.slice(1).map((point) => {
+      {holeSate.pointOnMap.map((point) => {
         const {/*  direction, */ distance } = getDirectionAndAngle(holeSate.userLocation as L.LatLng, point.coord as L.LatLng);
         return (
           <Polyline
             key={point.id}
             positions={[holeSate.userLocation as L.LatLng, point.coord]}
-
           >
             <Tooltip
-              direction="top"
-              className={cn('border-red-300 border-2', `rotate-${360}`)}
+              direction="auto"
               opacity={1}
               permanent
             >
-              <p className='text-base'>{(distance.toFixed(2))} Km</p>
+              <p className='text-base'>{(distance.toFixed(3))} Km</p>
             </Tooltip>
           </Polyline>
         )
