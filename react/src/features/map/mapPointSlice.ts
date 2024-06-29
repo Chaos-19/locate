@@ -72,7 +72,7 @@ const mapPointSlice = createSlice({
                 })
             }
         },
-        updataPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, id: number ,missLat?: number, missLng?: number}>) => {
+        updataPointOnMapFromDMS: (state, action: PayloadAction<{ coord: string, name: string, id: number, missLat?: number, missLng?: number }>) => {
             const latDMS = `${getNumValue(action.payload.coord[0])}° ${getNumValue(action.payload.coord[1])}' ${getNumValue(action.payload.coord[2])}"`
             const lngMS = `${getNumValue(action.payload.coord[3])}° ${getNumValue(action.payload.coord[4])}' ${getNumValue(action.payload.coord[5])}"`
 
@@ -94,6 +94,14 @@ const mapPointSlice = createSlice({
             }]
         },
         deletePointOnMap: (state, action: PayloadAction<number>) => {
+
+            const connect = state.connectedPoints.filter((point) => (point.startPoint.id !== action.payload))
+            console.log(action.payload);
+
+            console.log(connect);
+
+
+            state.connectedPoints = connect
             state.pointOnMap = state.pointOnMap.filter((point) => point.id !== action.payload)
         },
         setConnectPoint: (state, action: PayloadAction<{ startPoint: number, endPoint: number }>) => {

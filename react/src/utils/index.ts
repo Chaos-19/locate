@@ -6,13 +6,13 @@ function toRadians(degrees: number): number {
     return degrees * Math.PI / 180;
 }
 
-export function haversineDistance(point1: L.LatLng, point2: L.LatLng, missdValue?: { lat: number, lng: number }): number {
+export function haversineDistance(point1: L.LatLng, point2: L.LatLng, missdValue: { lat: number, lng: number } = { lat: 0, lng: 0 }): number {
 
     const { lat: lat1, lng: lon1 } = point1;
     let { lat: lat2, lng: lon2 } = point2;
 
-    lat2 = lat2 + (missdValue?.lat ?? 0 / 30.8 / 3600);
-    lon2 = lon2 + (missdValue?.lng ?? 0 / 30.8 / 3600);
+    lat2 = lat2 + ((missdValue?.lat / 30.8) / 3600);
+    lon2 = lon2 + ((missdValue?.lng / 30.8) / 3600);
 
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);

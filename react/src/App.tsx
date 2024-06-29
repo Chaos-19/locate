@@ -8,6 +8,7 @@ import MapMarkers from './features/map/MapMarkers'
 import { useAppSelector } from './app/hooks'
 import { getDirectionAndAngle } from './utils'
 import protracter from "./assets/img.png"
+import Compass from './components/Compass'
 
 
 
@@ -86,7 +87,7 @@ const App = () => {
         const {/*  direction, */ distance } = getDirectionAndAngle(point.startPoint.coord as L.LatLng, point.endPoint.coord as L.LatLng);
         return (
           <Polyline
-            key={point.startPoint.id+point.endPoint.id}
+            key={point.startPoint.id + point.endPoint.id}
             positions={[point.startPoint.coord as L.LatLng, point.endPoint.coord]}
           >
             <Tooltip
@@ -105,6 +106,7 @@ const App = () => {
           [[center?.lat as number - 0.5 / 10, center?.lng as number - 0.5 / 10],
           [center?.lat as number + 0.5 / 10, center?.lng as number + 0.5 / 10]]
         } zIndex={40} />
+      <Compass />
     </MapContainer>
   )
 }
