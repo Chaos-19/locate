@@ -17,4 +17,12 @@
        <uses-permission name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 </platform>
 <preference name="cordova.plugins.diagnostic.modules" value="" />
+<icon src="res/screen/android/splash_img.png" />
+<preference name="SplashScreenDelay" value="1000" />
+<platform name="android">
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen/android/splash_img.png" />
+</platform>
+<feature name="Compass">
+  </feature>
+
 </widget>
